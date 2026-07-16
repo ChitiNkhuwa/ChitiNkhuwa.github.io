@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chiti Nkhuwa — AWS Cloud & ML Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0F1923; --paper: #FAFAF8; --mid: #F2F0EB; --navy: #1A3A5C;
+    --copper: #B87333; --copper-pale: #F5EDE0; --muted: #6B7280;
+    --border: #E5E2DB; --text: #1F2937;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; background: var(--paper); color: var(--text); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 16px 48px; background: rgba(250,250,248,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-logo { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: .1em; color: var(--navy); font-weight: 500; }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a { font-size: 12px; letter-spacing: .04em; color: var(--muted); text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: var(--navy); }
+  .nav-cta { font-family: 'DM Mono', monospace; font-size: 11px; padding: 8px 18px; background: var(--navy); color: white; text-decoration: none; letter-spacing: .04em; transition: background .2s; }
+  .nav-cta:hover { background: var(--copper); }
+  .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--ink); }
+  .mobile-menu { display: none; position: fixed; top: 57px; left: 0; right: 0; z-index: 99; background: var(--paper); border-bottom: 1px solid var(--border); flex-direction: column; padding: 16px 24px; }
+  .mobile-menu a { font-size: 13px; color: var(--muted); text-decoration: none; padding: 14px 0; border-bottom: 1px solid var(--border); display: block; }
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu.open { display: flex; }
+
+  .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 120px 48px 80px; gap: 80px; }
+  .hero-tag { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--copper); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .hero-tag::before { content: ''; display: block; width: 28px; height: 1px; background: var(--copper); }
+  .hero h1 { font-size: clamp(36px, 4vw, 56px); font-weight: 600; line-height: 1.12; letter-spacing: -.025em; color: var(--ink); margin-bottom: 20px; }
+  .hero h1 span { color: var(--navy); }
+  .hero-desc { font-size: 16px; color: var(--muted); line-height: 1.8; max-width: 440px; margin-bottom: 36px; font-weight: 300; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary { background: var(--navy); color: white; padding: 12px 26px; font-size: 13px; font-family: 'DM Mono', monospace; letter-spacing: .04em; text-decoration: none; transition: background .2s; display: inline-block; }
+  .btn-primary:hover { background: var(--copper); }
+  .btn-secondary { border: 1px solid var(--border); color: var(--text); padding: 12px 26px; font-size: 13px; font-family: 'DM Mono', monospace; letter-spacing: .04em; text-decoration: none; transition: border-color .2s, color .2s; display: inline-block; }
+  .btn-secondary:hover { border-color: var(--navy); color: var(--navy); }
+  .hero-right { display: flex; flex-direction: column; gap: 2px; }
+  .cert-strip { background: var(--mid); border: 1px solid var(--border); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; transition: border-color .2s; }
+  .cert-strip:hover { border-color: var(--copper); }
+  .cert-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .cert-status { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .06em; padding: 3px 10px; border-radius: 99px; }
+  .status-done { background: #E1F5EE; color: #085041; }
+  .status-active { background: var(--copper-pale); color: #7A4010; }
+  .status-next { background: #EEF2FF; color: #3730A3; }
+  .availability-tag { margin-top: 16px; padding: 14px 20px; border: 1px solid var(--border); font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: .04em; text-align: center; }
+
+  section { padding: 96px 48px; }
+  .section-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--copper); margin-bottom: 10px; }
+  .section-title { font-size: clamp(24px, 2.5vw, 36px); font-weight: 600; line-height: 1.2; margin-bottom: 48px; color: var(--ink); letter-spacing: -.02em; }
+  .section-title span { color: var(--navy); }
+
+  .about { background: var(--ink); }
+  .about .section-eyebrow { color: #D4956A; }
+  .about .section-title { color: white; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
+  .about-text { font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.9; font-weight: 300; }
+  .about-text p + p { margin-top: 18px; }
+  .about-text strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+  .skills-grid { display: flex; flex-direction: column; gap: 1px; }
+  .skill-row { display: grid; grid-template-columns: 130px 1fr; gap: 16px; padding: 12px 16px; background: rgba(255,255,255,0.04); align-items: start; transition: background .2s; }
+  .skill-row:hover { background: rgba(184,115,51,0.1); }
+  .skill-cat { font-family: 'DM Mono', monospace; font-size: 10px; color: #D4956A; letter-spacing: .06em; text-transform: uppercase; padding-top: 2px; }
+  .skill-items { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+  .aws-section { background: var(--navy); }
+  .aws-section .section-eyebrow { color: #D4956A; }
+  .aws-section .section-title { color: white; }
+  .aws-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: rgba(255,255,255,0.1); }
+  .aws-card { background: var(--navy); padding: 32px 28px; border: 1px solid rgba(255,255,255,0.08); transition: background .2s; }
+  .aws-card:hover { background: rgba(255,255,255,0.06); }
+  .aws-card-icon { font-size: 28px; margin-bottom: 14px; }
+  .aws-card-title { font-size: 14px; font-weight: 600; color: white; margin-bottom: 8px; }
+  .aws-card-desc { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+  .aws-path { margin-top: 48px; padding: 24px 28px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+  .aws-path-title { font-family: 'DM Mono', monospace; font-size: 10px; color: #D4956A; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 16px; }
+  .cert-path { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+  .cert-node { text-align: center; padding: 0 20px; }
+  .cert-node-name { font-size: 12px; font-weight: 500; color: white; margin-bottom: 4px; }
+  .cert-node-date { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); }
+  .cert-node.done .cert-node-name { color: #5DCAA5; }
+  .cert-node.active .cert-node-name { color: #FAC775; }
+  .cert-node.next .cert-node-name { color: rgba(255,255,255,0.5); }
+  .cert-arrow { color: rgba(255,255,255,0.2); font-size: 16px; padding: 0 4px; }
+
+  .projects { background: var(--mid); }
+  .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .project-card { background: var(--paper); border: 1px solid var(--border); padding: 28px 24px; transition: border-color .2s, transform .15s; position: relative; }
+  .project-card:hover { border-color: var(--navy); transform: translateY(-2px); }
+  .project-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--copper); margin-bottom: 14px; }
+  .project-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 10px; line-height: 1.3; }
+  .project-desc { font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+  .project-stack { display: flex; flex-wrap: wrap; gap: 5px; }
+  .stack-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 8px; border: 1px solid var(--border); color: var(--muted); }
+  .coming-label { position: absolute; top: 16px; right: 16px; font-family: 'DM Mono', monospace; font-size: 9px; padding: 2px 8px; background: var(--copper-pale); color: var(--copper); letter-spacing: .06em; }
+
+  .experience { background: var(--paper); }
+  .exp-list { display: flex; flex-direction: column; border-top: 1px solid var(--border); }
+  .exp-item { display: grid; grid-template-columns: 200px 1fr; gap: 40px; padding: 32px 0; border-bottom: 1px solid var(--border); }
+  .exp-meta { padding-top: 3px; }
+  .exp-dates { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: .04em; margin-bottom: 6px; }
+  .exp-co { font-size: 12px; color: var(--muted); }
+  .exp-loc { font-size: 11px; color: #aaa; margin-top: 3px; }
+  .exp-role { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .exp-desc { font-size: 13px; color: var(--muted); line-height: 1.75; }
+  .exp-desc li { margin-left: 16px; margin-bottom: 4px; }
+
+  .europe { background: var(--copper-pale); }
+  .europe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .europe-card { background: white; border: 1px solid var(--border); padding: 28px 24px; transition: border-color .2s; }
+  .europe-card:hover { border-color: var(--copper); }
+  .europe-flag { font-size: 28px; margin-bottom: 12px; }
+  .europe-country { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .europe-tier { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--copper); letter-spacing: .08em; margin-bottom: 10px; }
+  .europe-desc { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .europe-visa { font-family: 'DM Mono', monospace; font-size: 10px; margin-top: 10px; padding: 4px 10px; background: var(--copper-pale); color: #7A4010; display: inline-block; }
+
+  .contact { background: var(--ink); text-align: center; }
+  .contact .section-eyebrow { color: #D4956A; }
+  .contact .section-title { color: white; }
+  .contact-desc { font-size: 15px; color: rgba(255,255,255,0.5); max-width: 520px; margin: 0 auto 48px; line-height: 1.8; font-weight: 300; }
+  .contact-grid { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .contact-link { display: inline-flex; align-items: center; gap: 8px; padding: 13px 20px; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.8); text-decoration: none; font-size: 12px; font-family: 'DM Mono', monospace; letter-spacing: .04em; transition: border-color .2s, color .2s; }
+  .contact-link:hover { border-color: var(--copper); color: var(--copper); }
+
+  footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06); padding: 20px 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  footer p { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.25); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-tag, .hero h1, .hero-desc, .hero-actions { animation: fadeUp .5s ease both; }
+  .hero h1 { animation-delay: .08s; }
+  .hero-desc { animation-delay: .16s; }
+  .hero-actions { animation-delay: .24s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links, .nav-cta { display: none; }
+    .nav-hamburger { display: flex; }
+    .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; gap: 40px; min-height: auto; }
+    .hero h1 { font-size: 38px; }
+    .hero-desc { font-size: 15px; max-width: 100%; }
+    .hero-actions { flex-direction: column; }
+    .btn-primary, .btn-secondary { text-align: center; }
+    section { padding: 60px 24px; }
+    .section-title { font-size: 26px; margin-bottom: 32px; }
+    .about-grid { grid-template-columns: 1fr; gap: 36px; }
+    .aws-grid { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .europe-grid { grid-template-columns: 1fr; }
+    .exp-item { grid-template-columns: 1fr; gap: 8px; }
+    .contact-grid { flex-direction: column; align-items: stretch; }
+    .contact-link { justify-content: center; }
+    footer { padding: 20px 24px; flex-direction: column; text-align: center; }
+    .cert-path { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+  @media (min-width: 769px) and (max-width: 1024px) {
+    nav { padding: 16px 32px; }
+    .hero { padding: 100px 32px 60px; gap: 40px; }
+    section { padding: 72px 32px; }
+    .projects-grid { grid-template-columns: 1fr 1fr; }
+    .aws-grid { grid-template-columns: 1fr 1fr; }
+    .europe-grid { grid-template-columns: 1fr 1fr; }
+    .about-grid { gap: 40px; }
+    footer { padding: 20px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Chiti Nkhuwa</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#aws">AWS Path</a>
+    <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
+    <a href="#europe">Location</a>
+  </div>
+  <a href="#contact" class="nav-cta">Get in touch</a>
+  <div class="nav-hamburger" onclick="toggleMenu()" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#aws" onclick="closeMenu()">AWS Path</a>
+  <a href="#projects" onclick="closeMenu()">Projects</a>
+  <a href="#experience" onclick="closeMenu()">Experience</a>
+  <a href="#europe" onclick="closeMenu()">Europe</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+</div>
+
+<section class="hero" id="home">
+  <div>
+    <div class="hero-tag">Lusaka, Zambia · Open to EU remote & relocation</div>
+    <h1>AWS Cloud<br>& <span>ML Engineer</span></h1>
+    <p class="hero-desc">I build cloud-native machine learning systems on AWS. MS in Business Analytics, 5+ years across fintech leadership, US mining operations, and data science — currently pursuing SAA-C03 and ML Specialty certifications.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">View work</a>
+      <a href="#contact" class="btn-secondary">Contact me</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="cert-strip"><span class="cert-name">AWS Cloud Practitioner</span><span class="cert-status status-done">Certified 2024</span></div>
+    <div class="cert-strip"><span class="cert-name">AWS Solutions Architect Associate</span><span class="cert-status status-active">In progress</span></div>
+    <div class="cert-strip"><span class="cert-name">AWS Machine Learning Specialty</span><span class="cert-status status-next">Planned Q3 2026</span></div>
+    <div class="cert-strip"><span class="cert-name">DELF B1 French</span><span class="cert-status status-done">Certified</span></div>
+    <div class="cert-strip"><span class="cert-name">DELF B2 French</span><span class="cert-status status-active">Dec 2026</span></div>
+    <div class="availability-tag">Open to remote roles globally</div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="section-eyebrow">About</div>
+  <div class="about-grid">
+    <div>
+      <h2 class="section-title" style="color:white;">Cloud-native.<br><span style="color:#D4956A;">Domain-aware.</span></h2>
+      <div class="about-text">
+        <p>I'm a Cloud and ML engineer based in Lusaka, Zambia, with an MS in Business Analytics from Grand Canyon University and a background spanning fintech product leadership, US mining sector operations, and data science.</p>
+        <p>My focus is <strong>AWS-native machine learning systems</strong> — architecting, deploying, and managing intelligent applications in the cloud. I'm consolidating deep expertise in AWS with SAA-C03 in progress and ML Specialty as the next step.</p>
+        <p>As Chief Digital Officer at a licensed fintech, I lead <strong>digital product strategy and technology roadmap</strong>, oversee core systems including the loan management platform, and advise the board on technology direction and governance in a regulated environment.</p>
+        <p>I have direct operational experience in the <strong>US mining sector</strong> at Nevada Copper Mines — understanding the data and financial architecture of large-scale mineral extraction. I'm pursuing DELF B2 French (B1 certified) to work effectively across francophone European and African markets.</p>
+      </div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-row"><span class="skill-cat">Cloud — AWS</span><span class="skill-items">EC2, S3, Lambda, SageMaker, IAM, VPC, RDS, CloudFormation, ELB</span></div>
+      <div class="skill-row"><span class="skill-cat">ML & AI</span><span class="skill-items">PyTorch, TensorFlow, Scikit-learn, XGBoost, LangChain, FAISS, CNNs, LSTM</span></div>
+      <div class="skill-row"><span class="skill-cat">Languages</span><span class="skill-items">Python (primary), SQL, R</span></div>
+      <div class="skill-row"><span class="skill-cat">Data</span><span class="skill-items">Pandas, NumPy, GeoPandas, Folium, Matplotlib, Streamlit</span></div>
+      <div class="skill-row"><span class="skill-cat">Engineering</span><span class="skill-items">Git, GitHub, REST APIs, LLM integration, Microsoft Dynamics 365</span></div>
+      <div class="skill-row"><span class="skill-cat">Domains</span><span class="skill-items">Fintech product & regulation, US mining operations, geospatial analysis</span></div>
+      <div class="skill-row"><span class="skill-cat">Human languages</span><span class="skill-items">English (native) · French DELF B1; B2 in progress</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="aws-section" id="aws">
+  <div class="section-eyebrow">AWS Focus</div>
+  <h2 class="section-title">Specialising in <span style="color:#D4956A;">cloud-native ML</span></h2>
+  <div class="aws-grid">
+    <div class="aws-card">
+      <div class="aws-card-icon">☁️</div>
+      <div class="aws-card-title">Cloud Architecture</div>
+      <div class="aws-card-desc">Designing scalable, secure AWS infrastructure — compute, storage, networking, IAM, and high availability patterns aligned with SAA-C03 best practices.</div>
+    </div>
+    <div class="aws-card">
+      <div class="aws-card-icon">🤖</div>
+      <div class="aws-card-title">ML on AWS</div>
+      <div class="aws-card-desc">Building and deploying ML pipelines using SageMaker, integrating LLMs via API, and operationalising models for production — aligned with AWS ML Specialty.</div>
+    </div>
+    <div class="aws-card">
+      <div class="aws-card-icon">🔗</div>
+      <div class="aws-card-title">Cloud Consulting</div>
+      <div class="aws-card-desc">Available for independent consulting engagements — AWS architecture reviews, ML system design, and cloud migration strategy for fintech and data-heavy organisations.</div>
+    </div>
+  </div>
+  <div class="aws-path">
+    <div class="aws-path-title">Certification pathway</div>
+    <div class="cert-path">
+      <div class="cert-node done"><div class="cert-node-name">Cloud Practitioner ✓</div><div class="cert-node-date">2024</div></div>
+      <div class="cert-arrow">→</div>
+      <div class="cert-node active"><div class="cert-node-name">SAA-C03 ◉</div><div class="cert-node-date">Jun 2026</div></div>
+      <div class="cert-arrow">→</div>
+      <div class="cert-node next"><div class="cert-node-name">ML Specialty</div><div class="cert-node-date">Q3 2026</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="projects" id="projects">
+  <div class="section-eyebrow">Projects</div>
+  <h2 class="section-title">Selected <span>work</span></h2>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div class="project-tag">Mining · Geospatial ML</div>
+      <div class="project-title">Mineral Resource Prediction</div>
+      <div class="project-desc">Geospatial ML pipeline for mineral exploration targeting — K-Means clustering and XGBoost with interactive GeoPandas and Folium visualisations. Domain knowledge informed by direct US mining sector experience.</div>
+      <div class="project-stack"><span class="stack-tag">XGBoost</span><span class="stack-tag">GeoPandas</span><span class="stack-tag">Folium</span><span class="stack-tag">K-Means</span><span class="stack-tag">Python</span></div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-tag">Audio · Cloud · Agentic AI</div>
+      <div class="project-title">AI Notetaker</div>
+      <div class="project-desc">Cloud-based agentic application for audio transcription and structured summarisation, deployed on AWS. End-to-end engineering: API integration, cloud deployment, structured output generation.</div>
+      <div class="project-stack"><span class="stack-tag">LLM</span><span class="stack-tag">AWS</span><span class="stack-tag">Python</span><span class="stack-tag">Cloud Audio</span></div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-tag">Computer Vision · PyTorch</div>
+      <div class="project-title">Battery Classification System</div>
+      <div class="project-desc">PyTorch CNN for battery type classification supporting automated recycling optimisation. Applied deep learning on physical system image data with real-world classification constraints.</div>
+      <div class="project-stack"><span class="stack-tag">PyTorch</span><span class="stack-tag">CNN</span><span class="stack-tag">Deep Learning</span></div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-tag">Computer Vision · AgriTech</div>
+      <div class="project-title">Leaf Disease Detector</div>
+      <div class="project-desc">CNN-based image classification model for automated plant disease detection from leaf imagery — applied computer vision on biological visual data.</div>
+      <div class="project-stack"><span class="stack-tag">PyTorch</span><span class="stack-tag">CNN</span><span class="stack-tag">Computer Vision</span></div>
+    </div>
+
+    <div class="project-card">
+      <span class="coming-label">Coming 2026</span>
+      <div class="project-tag">Industrial AI · Time Series</div>
+      <div class="project-title">Predictive Maintenance Dashboard</div>
+      <div class="project-desc">Equipment failure detection and remaining useful life estimation using LSTM anomaly detection on real sensor data. Streamlit dashboard deployed on AWS SageMaker.</div>
+      <div class="project-stack"><span class="stack-tag">LSTM</span><span class="stack-tag">SageMaker</span><span class="stack-tag">Streamlit</span><span class="stack-tag">Time Series</span></div>
+    </div>
+
+    <div class="project-card">
+      <span class="coming-label">Coming 2026</span>
+      <div class="project-tag">O&G · Forecasting · AWS</div>
+      <div class="project-title">Production Decline Forecasting</div>
+      <div class="project-desc">ML layer over traditional decline curve analysis using the Equinor Volve open dataset. Production forecasting for upstream oil and gas operations, deployed on AWS.</div>
+      <div class="project-stack"><span class="stack-tag">XGBoost</span><span class="stack-tag">LSTM</span><span class="stack-tag">AWS</span><span class="stack-tag">Volve Dataset</span></div>
+    </div>
+
+  </div>
+</section>
+
+<section class="experience" id="experience">
+  <div class="section-eyebrow">Experience</div>
+  <h2 class="section-title">Professional <span>background</span></h2>
+  <div class="exp-list">
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-dates">Sep 2025 — Present</div>
+        <div class="exp-co">Kashompa Enterprises</div>
+        <div class="exp-loc">Lusaka, Zambia</div>
+      </div>
+      <div>
+        <div class="exp-role">Chief Digital Officer</div>
+        <div class="exp-desc"><ul>
+          <li>Lead digital product strategy and technology roadmap for a BoZ-licensed money-lending fintech, advising CEO and Board on platform direction and system priorities.</li>
+          <li>Oversee loan management system and core technology infrastructure, ensuring operational continuity and planning future-state architecture.</li>
+          <li>Manage cybersecurity posture, data protection, and IT governance in a regulated financial environment (BoZ, FIC).</li>
+          <li>Assess emerging technologies and translate business requirements into actionable technology decisions.</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-dates">Apr 2023 — Aug 2024</div>
+        <div class="exp-co">Nevada Copper Mines</div>
+        <div class="exp-loc">Yerington, Nevada, USA</div>
+      </div>
+      <div>
+        <div class="exp-role">Staff Accountant</div>
+        <div class="exp-desc"><ul>
+          <li>Worked embedded in a large-scale US copper mining operation — developing direct domain knowledge of mining workflows, operational data structures, and site-level financial architecture.</li>
+          <li>Cost analysis, fixed asset management, and month-end close using Microsoft Dynamics 365.</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-dates">Dec 2022 — Apr 2023</div>
+        <div class="exp-co">Nevada Successful Solutions</div>
+        <div class="exp-loc">Sparks, Nevada, USA</div>
+      </div>
+      <div>
+        <div class="exp-role">Data Analytics & Business Optimisation</div>
+        <div class="exp-desc"><ul>
+          <li>Built regression-based credit analysis models in Python; delivered data-driven business insights to clients.</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-dates">2019 — 2022</div>
+        <div class="exp-co">Zambia & USA</div>
+      </div>
+      <div>
+        <div class="exp-role">Accounting & Analytics Roles</div>
+        <div class="exp-desc"><ul>
+          <li>Accounting Clerk, Umoja Community Education Foundation; Associate, JC Graphics & Web — AR/AP, financial reporting, and analytics.</li>
+        </ul></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="europe" id="europe">
+  <div class="section-eyebrow">Location</div>
+  <h2 class="section-title" style="color:var(--ink);">Open to <span>EMEA remote & relocation</span></h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px;">
+    <div style="background:white;border:1px solid var(--border);padding:28px 24px;">
+      <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:10px;">Current location</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7;">Lusaka, Zambia<br>Available immediately for remote engagement</div>
+    </div>
+    <div style="background:white;border:1px solid var(--border);padding:28px 24px;">
+      <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:10px;">Relocation</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7;">Open to relocation across Europe, Middle East, and Africa. Willing to follow the opportunity.</div>
+    </div>
+  </div>
+  <div style="background:white;border:1px solid var(--border);padding:28px 24px;">
+    <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:16px;">Markets of interest</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+      <span style="font-family:'DM Mono',monospace;font-size:11px;padding:6px 14px;border:1px solid var(--border);color:var(--muted);">🇮🇪 Ireland</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;padding:6px 14px;border:1px solid var(--border);color:var(--muted);">🇧🇪 Belgium</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;padding:6px 14px;border:1px solid var(--border);color:var(--muted);">🇳🇱 Netherlands</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;padding:6px 14px;border:1px solid var(--border);color:var(--muted);">🇩🇪 Germany</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;padding:6px 14px;border:1px solid var(--border);color:var(--muted);">🇬🇧 United Kingdom</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;padding:6px 14px;border:1px solid var(--border);color:var(--muted);">🇦🇪 UAE</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;padding:6px 14px;border:1px solid var(--border);color:var(--muted);">🇿🇦 South Africa</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;padding:6px 14px;border:1px solid var(--border);color:var(--muted);">🇺🇸 United States</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;padding:6px 14px;border:1px solid var(--border);color:var(--muted);">🇨🇦 Canada</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;padding:6px 14px;border:1px solid var(--border);color:var(--muted);">🌍 Remote — anywhere</span>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="section-eyebrow">Contact</div>
+  <h2 class="section-title">Get in <span style="color:#D4956A;">touch</span></h2>
+  <p class="contact-desc">Available for remote AWS cloud and ML roles, independent consulting engagements, and EU relocation opportunities. Response within 48 hours.</p>
+  <div class="contact-grid">
+    <a href="mailto:cnkhuwacn7@gmail.com" class="contact-link">✉ cnkhuwacn7@gmail.com</a>
+    <a href="tel:+260762338468" class="contact-link">✆ +260 762 338 468</a>
+    <a href="https://wa.me/18054337222" target="_blank" class="contact-link">💬 WhatsApp</a>
+    <a href="https://linkedin.com/in/chiti-nkhuwa-62b414159" target="_blank" class="contact-link">◈ LinkedIn</a>
+    <a href="https://github.com/ChitiNkhuwa" target="_blank" class="contact-link">⌥ GitHub</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Chiti Nkhuwa · Lusaka, Zambia</p>
+  <p>AWS Cloud & ML Engineer · Open to global remote & relocation</p>
+</footer>
+
+<script>
+  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+  function closeMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+  document.addEventListener('click', function(e) {
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.getElementById('hamburger');
+    if (!menu.contains(e.target) && !hamburger.contains(e.target)) menu.classList.remove('open');
+  });
+</script>
+</body>
+</html>
